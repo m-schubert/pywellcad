@@ -1,5 +1,6 @@
 from win32com.client import Dispatch
 from ._dispatch_wrapper import DispatchWrapper
+from ._container import Container
 from ._borehole import Borehole
 
 class Application(DispatchWrapper):
@@ -34,10 +35,7 @@ class Application(DispatchWrapper):
     
     def __init__(self):
         super().__init__(Dispatch("WellCAD.Application"))
-
-    def __iter__(self):
-        return (self.get_borehole(i) for i in range(self.nb_of_documents))
-
+    
     def show_window(self):
         """Attempts to display the WellCAD workspace on screen.
         
@@ -86,8 +84,7 @@ class Application(DispatchWrapper):
             The new borehole document.
         """
         return Borehole(self._dispatch.NewBorehole(template))
-
-        
+    
     def open_borehole(self, path=None):
         """Opens a WellCAD borehole document file (.wcl file).
         
@@ -105,7 +102,11 @@ class Application(DispatchWrapper):
             failed.
         """
         return Borehole(self._dispatch.OpenBorehole(path))
-        
+    
+    @property
+    def boreholes(self):
+        """Container[Borehole]: The borehole documents open in WellCAD."""
+        return Container(self.get_borehole, lambda: self.nb_of_documents)
 
     def get_borehole(self, index=None):
         """Gets an existing borehole document by index.
