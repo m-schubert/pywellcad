@@ -105,7 +105,7 @@ class Application(DispatchWrapper):
     
     @property
     def boreholes(self):
-        """Container[Borehole]: The borehole documents open in WellCAD."""
+        """Sequence[Borehole]: The borehole documents open in WellCAD."""
         return Container(self.get_borehole, lambda: self.nb_of_documents)
 
     def get_borehole(self, index=None):
