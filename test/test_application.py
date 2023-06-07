@@ -51,6 +51,15 @@ class TestApplication(unittest.TestCase):
         self.app.new_borehole()
         self.assertIsInstance(self.app.get_borehole(0), wellcad.com.Borehole)
     
+    def test_boreholes_container(self):
+        for i in range(3):
+            self.app.new_borehole()
+        boreholes = self.app.boreholes
+        self.assertEqual(len(boreholes), self.app.nb_of_documents)
+        for borehole in boreholes:
+            self.assertIsInstance(borehole, wellcad.com.Borehole)
+        self.assertEqual(boreholes[0], self.app.get_borehole(0))
+    
     def test_get_out_of_range_borehole(self):
         self.assertIsNone(self.app.get_borehole(1000))
     
